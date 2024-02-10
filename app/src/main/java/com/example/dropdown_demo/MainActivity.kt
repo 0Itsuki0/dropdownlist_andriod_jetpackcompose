@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import androidx.compose.ui.zIndex
 import com.example.dropdown_demo.ui.theme.Dropdown_demoTheme
 
 class MainActivity : ComponentActivity() {
@@ -61,69 +60,76 @@ fun DropdownList(itemList: List<String>, selectedIndex: Int, modifier: Modifier,
     var showDropdown by rememberSaveable { mutableStateOf(true) }
     val scrollState = rememberScrollState()
 
-    // button
-    Box(
-        modifier = modifier
-            .background(Color.Red)
-            .clickable { showDropdown = true },
+    Column(
+        modifier = Modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center) {
+
+        // button
+        Box(
+            modifier = modifier
+                .background(Color.Red)
+                .clickable { showDropdown = true },
 //            .clickable { showDropdown = !showDropdown },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = itemList[selectedIndex], modifier = Modifier.padding(3.dp))
-    }
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = itemList[selectedIndex], modifier = Modifier.padding(3.dp))
+        }
 
-    // dropdown list
-    Box() {
-        if (showDropdown) {
-            Popup(
-                alignment = Alignment.TopCenter,
-                properties = PopupProperties(
-                    excludeFromSystemGesture = true,
-                ),
-                // to dismiss on click outside
-                onDismissRequest = { showDropdown = false }
-            ) {
-
-                Column(
-                    modifier = modifier
-                        .heightIn(max = 90.dp)
-                        .verticalScroll(state = scrollState)
-                        .border(width = 1.dp, color = Color.Gray),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+        // dropdown list
+        Box {
+            if (showDropdown) {
+                Popup(
+                    alignment = Alignment.TopCenter,
+                    properties = PopupProperties(
+                        excludeFromSystemGesture = true,
+                    ),
+                    // to dismiss on click outside
+                    onDismissRequest = { showDropdown = false }
                 ) {
 
-                    itemList.onEachIndexed { index, item ->
-                        if (index != 0) {
-                            Divider(thickness = 1.dp, color = Color.LightGray)
-                        }
-                        Box(
-                            modifier = Modifier
-                                .background(Color.Green)
-                                .fillMaxWidth()
-                                .clickable {
-                                    onItemClick(index)
-                                    showDropdown = !showDropdown
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = item,)
-                        }
-                    }
+                    Column(
+                        modifier = modifier
+                            .heightIn(max = 90.dp)
+                            .verticalScroll(state = scrollState)
+                            .border(width = 1.dp, color = Color.Gray),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
 
+                        itemList.onEachIndexed { index, item ->
+                            if (index != 0) {
+                                Divider(thickness = 1.dp, color = Color.LightGray)
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .background(Color.Green)
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        onItemClick(index)
+                                        showDropdown = !showDropdown
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = item)
+                            }
+                        }
+
+                    }
                 }
             }
         }
     }
+
 }
 
 
 @Composable
 fun ContentView() {
-    val itemList = listOf<String>("Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6")
+    val itemList = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6")
 //    val itemList = listOf<String>("Item 1", "Item 2", "Item 3")
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
-    var buttonModifier = Modifier.width(100.dp)
+    val buttonModifier = Modifier.width(100.dp)
 
     Column(
 
